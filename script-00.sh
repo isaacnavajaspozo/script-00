@@ -133,15 +133,23 @@ export LS_COLORS="di=1;32:fi=0;37:ln=1;35:so=0;38;5;208:pi=0;34:bd=0;33:cd=0;33:
 #     — ejecutables en rojo brillante (bold red).
 EOF
 
+
 # Agrego mis propios comandos:
 
 # comando : scanvuln
 # escanea rapidamente las vulnerabilidades de la IP asignada
 # -------------------------------------------------------------------
-cat <<EOF > /usr/bin/scanvuln
+echo -e "${YELLOW}Mis propios comandos: ${NC}"
+echo "¿Quieres instalar mi comando scanvuln? (s/n):"
+read -r resscanvuln
+
+if [[ "$resscanvuln" =~ ^[Ss]$ ]]; then
+cat <<'EOF' | sudo tee /usr/bin/scanvuln > /dev/null
 #!/bin/bash
+
+# Comprobación de Nmap
 if ! command -v nmap &>/dev/null; then
-  read -rp "[!] Nmap no esta instalado. ¿Quieres instalarlo? (s/n): " respuesta
+  read -rp "[!] Nmap no está instalado. ¿Quieres instalarlo? (s/n): " respuesta
   if [[ "$respuesta" =~ ^[Ss]$ ]]; then
     echo "[*] Instalando nmap..."
     sudo apt-get update && sudo apt-get install -y nmap
@@ -155,29 +163,37 @@ if ! command -v nmap &>/dev/null; then
   fi
 fi
 
-echo "[*] Este comando realiza un escaneo de vulnerabilidades sobre la IP específica."
-read -rp "Introduce la IP a escanear: " ip
-
-if [[ -z "$ip" ]]; then
-  echo "[!] No se ha introducido una IP valida."
+# Verificar parámetro
+if [[ -z "$1" ]]; then
+  echo "================================================================================"
+  echo "Uso: scanvuln <IP>"        # escaneo de servicios y vulnerabilidades usando Nmap        
+  echo " "
   exit 1
 fi
 
-echo "[*] Escaneando con Nmap + scripts de vulnerabilidades..."
+ip="$1"
+echo "[*] Escaneando la IP $ip con Nmap + scripts de vulnerabilidades..."
 sudo nmap -sV --script vuln "$ip"
 EOF
 
 chmod 770 /usr/bin/scanvuln
+echo "✅ Comando scanvuln habilitado"
+fi
 
-# -
+# - 
 
 # comando : pingtime
 # hace un ping registrando la fecha y tiempo exacto y de manera opcional guarda cada peticion en la ruta /var/log/ping/
 # -------------------------------------------------------------------
-cat <<EOF > /usr/bin/pingtime
+echo "¿Quieres instalar mi comando pingtime? (s/n):"
+read -r respingtime
+
+if [[ "$respingtime" =~ ^[Ss]$ ]]; then
+cat <<'EOF' | sudo tee /usr/bin/pingtime > /dev/null
 #!/bin/bash
 log_dir="/var/log/ping"
 
+# Si el primer argumento es -r, cambiar al directorio de logs
 if [[ "$1" == "-r" ]]; then
   cd "$log_dir" 2>/dev/null || { echo "No se pudo acceder a $log_dir"; exit 1; }
   echo "Ubicación actual: $(pwd)"
@@ -189,6 +205,7 @@ if [[ -z "$1" ]]; then
   echo "================================================================================"
   echo "Uso: pingtime <IP|host>                                     # monitorizar ping"
   echo "Uso: pingtime -r                                            # ver logs"
+  echo " "
   exit 1
 fi
 
@@ -196,6 +213,7 @@ host="$1"
 read -rp "¿Quieres guardar el registro? (s/n): " respuesta
 
 timestamp=$(date +"%Y%m%d_%H%M%S")
+log_dir="/var/log/ping"
 log_file="$log_dir/ping_${host}_$timestamp.log"
 ping_cmd="ping -i 1"
 
@@ -236,60 +254,46 @@ if [[ "$respuesta" =~ ^[Ss]$ ]]; then
   echo "Registro guardado en $log_file"
 
 else
-  last_state=""
   $ping_cmd "$host" | while IFS= read -r line; do
-    date_str="[$(date '+%Y-%m-%d %H:%M:%S')]"
-    echo "$date_str $line"
-
-    if echo "$line" | grep -q "bytes from"; then
-      current_state="up"
-    else
-      current_state="down"
-    fi
-
-    # Mostrar mensaje solo cuando cambia a down (sin señal)
-    if [[ "$current_state" != "$last_state" && "$current_state" == "down" ]]; then
-      echo "$date_str No hay señal o destino inalcanzable"
-    fi
-    last_state="$current_state"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $line"
   done
 fi
 EOF
-
-chmod 770 /usr/bin/pingtime
+    
+    chmod 770 /usr/bin/pingtime
+    echo "✅ Comando pingtime habilitado"
+fi
 
 # - 
 
 # comando : ayuda
 # muestra un texto de buenas prácticas con comandos
 # -------------------------------------------------------------------
-cat <<EOF > /usr/bin/ayuda
+echo "¿Quieres instalar mi comando ayuda? (s/n):"
+read -r resayuda
+
+if [[ "$resayuda" =~ ^[Ss]$ ]]; then
+    cat <<'EOF' | sudo tee /usr/bin/ayuda > /dev/null
 #!/bin/bash
 YELLOW="\e[33m"
 RESET="\e[0m"
 
-echo -e "
-${YELLOW}==========================================================================================${RESET}
-${YELLOW}[parámetros útiles]::${RESET}
-
-${YELLOW}snmpwalk -v2c -c <COMMUNITY-SNMP> -Oneq <IP-SNMP> .1 > dc1-kvm1.snmpwalk${RESET}
-envío al archivo dc1-kvm1.snmpwalk todos los resultados de snmp (snmp empiezan por .1)
-
-${YELLOW}rsync -avzc --progress /ruta/origen/ usuario@host:/ruta/destino/${RESET}
-migrar un archivo manteniendo todo (usuarios, permisos, hard links...)
-
-${YELLOW}==========================================================================================${RESET}
-${YELLOW}[tar]::${RESET}
-
-${YELLOW}tar -czvf prueba.tar.gz comprimir/${RESET}
-crea el archivo tar y lo comprime con gzip, (sin z si solo quiero un archivo .tar sin comprimir)
-
-${YELLOW}tar -xzvf prueba.tar.gz${RESET}
-descomprime el archivo tar siempre que haya sido comprimido con gzip (si no ha sido comprimido, usar -xvf)
+printf "%b\n" "\
+${YELLOW}chattr +i /ruta/origen/documento.txt${RESET}                                       - Establece atributo inmutable (impide modificar/borrar el archivo, -i para revertirlo).
+${YELLOW}snmpwalk -v2c -c <COMMUNITY-SNMP> -Oneq <IP-SNMP> .1 > dc1-kvm1.snmpwalk${RESET}   - Exporta árbol SNMP completo al archivo dc1-kvm1.snmpwalk.
+${YELLOW}rsync -avzc --progress /ruta/origen/ usuario@host:/ruta/destino/${RESET}           - Copia eficiente de Linux a Linux, mantiene permisos y metadatos (usuarios, hard-links...).
+${YELLOW}scp -r /ruta/origen/ usuario@host:/ruta/destino/${RESET}                           - Copia directa pero más lenta, ideal usando Windows, si Windows no tiene rsync.
+${YELLOW}tar -czvf prueba.tar.gz comprimir/${RESET}                                         - Comprime carpeta con gzip.
+${YELLOW}tar -xzvf prueba.tar.gz${RESET}                                                    - Extrae contenido si fue comprimido con gzip.
+${YELLOW}smbstatus | grep \"nombre_del_archivo.xls\"${RESET}                                  - Verifica si un archivo está abierto por Samba (lo detengo con kill -9).
+${YELLOW}smbstatus -L${RESET}                                                               - Lista todos los archivos abiertos vía Samba con usuarios y PIDs.
 "
 EOF
 
-chmod 770 /usr/bin/ayuda
+    chmod 770 /usr/bin/ayuda
+    echo "✅ Comando ayuda habilitado"
+fi
+
 
 ## Configuración mínima de logs
 # **************************************
@@ -319,51 +323,52 @@ localectl
 # **************************************
 cat <<EOF > ~/.vimrc
 " configuración archivo .vimrc
-set number
-set cursorline
-set scrolloff=8
-set incsearch
-set hlsearch
-set ignorecase
-set smartcase
-set expandtab
-set tabstop=4
-set shiftwidth=4
-set wildmenu
-set foldmethod=indent
-set foldlevel=99
-syntax on
-set background=dark
-colorscheme industry
-highlight Comment ctermfg=Green guifg=#00FF00
-highlight LineNr ctermfg=Magenta
-highlight CursorLineNr ctermfg=DarkMagenta
-highlight Normal ctermfg=White ctermbg=DarkGray
-highlight Keyword ctermfg=LightGray
-highlight Function ctermfg=Yellow
-highlight Type ctermfg=Magenta
-highlight Constant ctermfg=Magenta
-highlight Identifier ctermfg=White
-highlight Statement ctermfg=Yellow
-highlight Error ctermfg=White ctermbg=Red
-highlight Search ctermfg=Black ctermbg=Yellow
-highlight Visual ctermbg=Grey
-highlight StatusLine ctermfg=Blue ctermbg=White
-highlight StatusLineNC ctermfg=Blue ctermbg=DarkGray
-highlight Special ctermfg=Blue
-highlight PreProc ctermfg=Grey
-highlight Todo ctermfg=Black ctermbg=Yellow
-highlight Underlined ctermfg=White
-highlight Pmenu ctermbg=DarkGray
-highlight PmenuSel ctermbg=Blue ctermfg=White
-highlight DiffAdd ctermbg=Green
-highlight DiffChange ctermbg=Yellow
-highlight DiffDelete ctermbg=Red
-highlight Folded ctermfg=White ctermbg=DarkBlue
-set laststatus=2
-set noerrorbells
-set history=1000
-set clipboard=unnamedplus
+" Configuración del archivo .vimrc
+set number                                              " Muestra los números de línea en el margen izquierdo.
+set cursorline                                          " Resalta la línea donde se encuentra el cursor.
+set scrolloff=8                                         " Mantiene 8 líneas visibles por encima y por debajo del cursor al desplazarse.
+set incsearch                                           " Realiza la búsqueda de manera incremental, mostrando resultados a medida que se escribe.
+set hlsearch                                            " Resalta todas las coincidencias de la búsqueda.
+set ignorecase                                          " Ignora mayúsculas y minúsculas en las búsquedas.
+set smartcase                                           " Si se usa una mayúscula en la búsqueda, se activa la distinción entre mayúsculas y minúsculas.
+set expandtab                                           " Convierte las tabulaciones en espacios.
+set tabstop=4                                           " Establece el ancho de una tabulación a 4 espacios.
+set shiftwidth=4                                        " Establece el ancho de sangría a 4 espacios.
+set wildmenu                                            " Mejora la interfaz de autocompletado en la línea de comandos.
+set foldmethod=indent                                   " Usa la indentación para determinar los pliegues de código.
+set foldlevel=99                                        " Establece el nivel de pliegue inicial a 99, mostrando todo el código.
+syntax on                                               " Activa el resaltado de sintaxis.
+set background=dark                                     " Establece el fondo oscuro para el resaltado de sintaxis.
+colorscheme industry                                    " Aplica el esquema de colores 'industry'.
+highlight Comment ctermfg=Green guifg=#00FF00           " Resalta los comentarios en verde.
+highlight LineNr ctermfg=Magenta                        " Resalta los números de línea en magenta.
+highlight CursorLineNr ctermfg=DarkMagenta              " Resalta el número de línea del cursor en magenta oscuro.
+highlight Normal ctermfg=White ctermbg=DarkGray         " Establece el color normal del texto a blanco sobre fondo gris oscuro.
+highlight Keyword ctermfg=LightGray                     " Resalta las palabras clave en gris claro.
+highlight Function ctermfg=Yellow                       " Resalta las funciones en amarillo.
+highlight Type ctermfg=Magenta                          " Resalta los tipos de datos en magenta.
+highlight Constant ctermfg=Magenta                      " Resalta las constantes en magenta.
+highlight Identifier ctermfg=White                      " Resalta los identificadores en blanco.
+highlight Statement ctermfg=Yellow                      " Resalta las declaraciones en amarillo.
+highlight Error ctermfg=White ctermbg=Red               " Resalta los errores en blanco sobre fondo rojo.
+highlight Search ctermfg=Black ctermbg=Yellow           " Resalta la búsqueda en negro sobre fondo amarillo.
+highlight Visual ctermbg=Grey                           " Resalta la selección visual en gris.
+highlight StatusLine ctermfg=Blue ctermbg=White         " Establece el color de la línea de estado en azul sobre fondo blanco.
+highlight StatusLineNC ctermfg=Blue ctermbg=DarkGray    " Establece el color de la línea de estado no activa en azul sobre fondo gris oscuro.
+highlight Special ctermfg=Blue                          " Resalta los elementos especiales en azul.
+highlight PreProc ctermfg=Grey                          " Resalta las preprocesadores en gris.
+highlight Todo ctermfg=Black ctermbg=Yellow             " Resalta las tareas pendientes en negro sobre fondo amarillo.
+highlight Underlined ctermfg=White                      " Resalta el texto subrayado en blanco.
+highlight Pmenu ctermbg=DarkGray                        " Establece el fondo del menú de completado en gris oscuro.
+highlight PmenuSel ctermbg=Blue ctermfg=White           " Establece el fondo del menú de selección en azul y el texto en blanco.
+highlight DiffAdd ctermbg=Green                         " Resalta las adiciones en el diff en verde.
+highlight DiffChange ctermbg=Yellow                     " Resalta los cambios en el diff en amarillo.
+highlight DiffDelete ctermbg=Red                        " Resalta las eliminaciones en el diff en rojo.
+highlight Folded ctermfg=White ctermbg=DarkBlue         " Resalta los pliegues en blanco sobre fondo azul oscuro.
+set laststatus=2                                        " Siempre muestra la línea de estado.
+set noerrorbells                                        " Desactiva los sonidos de error.
+set history=1000                                        " Establece el tamaño del historial de comandos a 1000 entradas.
+set clipboard=unnamedplus                               " Usa el portapapeles del sistema para copiar y pegar.
 EOF
 
 # Información en inicio de sesión
