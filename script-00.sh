@@ -98,7 +98,19 @@ fi
 
 # -------------------------------------------------------------------
 
-# Configuro bashrc
+## Configuro bashrc
+# Preguntar al usuario el estilo
+while true; do
+    echo -e "${YELLOW}Selecciona el estilo: ${NC}"
+    echo "1) Estilo cyberpunk                        # estilo cyberpunk y profesional (rosa y verde)"
+    echo "2) Estilo técnica/grisácea                 # estilo alternativo e informal (gris y amarillo)"    
+    read -rp "Opción (1 o 2): " opcion
+
+    case "$opcion" in
+        1)
+            echo "Has elegido el estilo cyberpunk"
+# Configuro .bashrc (estilo cyberpunk)
+# **************************************
 cat <<EOF > ~/.bashrc
 ## alias del servidor
 alias ls='ls -ha --color=auto --group-directories-first'
@@ -109,30 +121,158 @@ alias mv='mv -i'
 alias rm='rm -i'
 alias grep='grep --color=auto'
 alias df='df --exclude-type=tmpfs'
+alias lsblk='lsblk -e7 -o NAME,MAJ:MIN,RM,SIZE,RO,TYPE,MOUNTPOINT,FSTYPE,MODEL,MODE,STATE,VENDOR,UUID'
 
 ## Cambiar diseño del prompt (estilo cyberpunk)
-# **************************************
-# color 1
+# -------------------------------------------------------------------
+# color (estilo cyberpunk)
 PS1='\[\e[0;90m\]\u箱\e[38;5;196m[\H]\e[38;5;196m\e[1;32m \w\e[0;37m $: '
-# color 2
-# PS1='\[\e[1;31m\]\u箱[\H] \w $: \[\e[0m\]'
 
 ## cambiar colores para ls (estilo cyberpunk)
-# **************************************
-# opcion 1:
+# -------------------------------------------------------------------
+# opcion (cyverpunk)
 export LS_COLORS="di=1;32:fi=0;37:ln=1;35:so=0;38;5;208:pi=0;34:bd=0;33:cd=0;33:or=0;31:mi=0;31:ex=1;31"
-#     — directorios en verde brillante (bold green).
-#     — archivos normales en gris claro (normal white/gray).
-#     — enlaces simbólicos en magenta brillante (bold magenta).
-#     — sockets en naranja quemado (color 208 en la paleta 256).
-#     — tuberías (pipes) en azul normal (normal blue).
-#     — dispositivos de bloque en amarillo normal.
-#     — dispositivos de carácter en amarillo normal.
-#     — archivos rotos en rojo normal (normal red).
-#     — archivos inexistentes en rojo normal (normal red).
-#     — ejecutables en rojo brillante (bold red).
+#     di — directorios en verde brillante (bold green).
+#     fi — archivos normales en gris claro (normal white/gray).
+#     ln — enlaces simbólicos en magenta brillante (bold magenta).
+#     so — sockets en naranja quemado (color 208 en la paleta 256).
+#     pi — tuberías (pipes) en azul normal (normal blue).
+#     bd — dispositivos de bloque en amarillo normal.
+#     cd — dispositivos de carácter en amarillo normal.
+#     or — archivos rotos en rojo normal (normal red).
+#     mi — archivos inexistentes en rojo normal (normal red).
+#     ex — ejecutables en rojo brillante (bold red).
 EOF
 
+# Configuro vimrc (estilo cyberpunk)
+# -------------------------------------------------------------------
+cat <<EOF > ~/.vimrc
+" configuración archivo .vimrc
+" Configuración del archivo .vimrc
+set number                                              " Muestra los números de línea en el margen izquierdo.
+set cursorline                                          " Resalta la línea donde se encuentra el cursor.
+set scrolloff=8                                         " Mantiene 8 líneas visibles por encima y por debajo del cursor al desplazarse.
+set incsearch                                           " Realiza la búsqueda de manera incremental, mostrando resultados a medida que se escribe.
+set hlsearch                                            " Resalta todas las coincidencias de la búsqueda.
+set ignorecase                                          " Ignora mayúsculas y minúsculas en las búsquedas.
+set smartcase                                           " Si se usa una mayúscula en la búsqueda, se activa la distinción entre mayúsculas y minúsculas.
+set expandtab                                           " Convierte las tabulaciones en espacios.
+set tabstop=4                                           " Establece el ancho de una tabulación a 4 espacios.
+set shiftwidth=4                                        " Establece el ancho de sangría a 4 espacios.
+set wildmenu                                            " Mejora la interfaz de autocompletado en la línea de comandos.
+set foldmethod=indent                                   " Usa la indentación para determinar los pliegues de código.
+set foldlevel=99                                        " Establece el nivel de pliegue inicial a 99, mostrando todo el código.
+syntax on                                               " Activa el resaltado de sintaxis.
+set background=dark                                     " Establece el fondo oscuro para el resaltado de sintaxis.
+colorscheme industry                                    " Aplica el esquema de colores 'industry'.
+highlight Comment ctermfg=Green guifg=#00FF00           " Resalta los comentarios en verde.
+highlight LineNr ctermfg=Magenta                        " Resalta los números de línea en magenta.
+highlight CursorLineNr ctermfg=DarkMagenta              " Resalta el número de línea del cursor en magenta oscuro.
+highlight Normal ctermfg=White ctermbg=DarkGray         " Establece el color normal del texto a blanco sobre fondo gris oscuro.
+highlight Keyword ctermfg=LightGray                     " Resalta las palabras clave en gris claro.
+highlight Function ctermfg=Yellow                       " Resalta las funciones en amarillo.
+highlight Type ctermfg=Magenta                          " Resalta los tipos de datos en magenta.
+highlight Constant ctermfg=Magenta                      " Resalta las constantes en magenta.
+highlight Identifier ctermfg=White                      " Resalta los identificadores en blanco.
+highlight Statement ctermfg=Yellow                      " Resalta las declaraciones en amarillo.
+highlight Error ctermfg=White ctermbg=Red               " Resalta los errores en blanco sobre fondo rojo.
+highlight Search ctermfg=Black ctermbg=Yellow           " Resalta la búsqueda en negro sobre fondo amarillo.
+highlight Visual ctermbg=Grey                           " Resalta la selección visual en gris.
+highlight StatusLine ctermfg=Blue ctermbg=White         " Establece el color de la línea de estado en azul sobre fondo blanco.
+highlight StatusLineNC ctermfg=Blue ctermbg=DarkGray    " Establece el color de la línea de estado no activa en azul sobre fondo gris oscuro.
+highlight Special ctermfg=Blue                          " Resalta los elementos especiales en azul.
+highlight PreProc ctermfg=Grey                          " Resalta las preprocesadores en gris.
+highlight Todo ctermfg=Black ctermbg=Yellow             " Resalta las tareas pendientes en negro sobre fondo amarillo.
+highlight Underlined ctermfg=White                      " Resalta el texto subrayado en blanco.
+highlight Pmenu ctermbg=DarkGray                        " Establece el fondo del menú de completado en gris oscuro.
+highlight PmenuSel ctermbg=Blue ctermfg=White           " Establece el fondo del menú de selección en azul y el texto en blanco.
+highlight DiffAdd ctermbg=Green                         " Resalta las adiciones en el diff en verde.
+highlight DiffChange ctermbg=Yellow                     " Resalta los cambios en el diff en amarillo.
+highlight DiffDelete ctermbg=Red                        " Resalta las eliminaciones en el diff en rojo.
+highlight Folded ctermfg=White ctermbg=DarkBlue         " Resalta los pliegues en blanco sobre fondo azul oscuro.
+set laststatus=2                                        " Siempre muestra la línea de estado.
+set noerrorbells                                        " Desactiva los sonidos de error.
+set history=1000                                        " Establece el tamaño del historial de comandos a 1000 entradas.
+set clipboard=unnamedplus                               " Usa el portapapeles del sistema para copiar y pegar.
+EOF
+        
+            break
+            ;;
+        2)
+            echo "Has elegido el estilo técnica/grisácea"
+# Configuro .bashrc (técnica/grisácea)
+# -------------------------------------------------------------------
+cat <<EOF > ~/.bashrc
+## alias del servidor
+alias ls='ls -ha --color=auto --group-directories-first'
+alias la='ls $LS_OPTION -lhai --group-directories-first'
+alias _liberarespacioram='sudo sync; echo 1 | sudo tee /proc/sys/vm/drop_caches | echo "petición realizada correctamente." && echo "" && free -h'
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -i'
+alias grep='grep --color=auto'
+alias df='df --exclude-type=tmpfs'
+alias lsblk='lsblk -e7 -o NAME,MAJ:MIN,RM,SIZE,RO,TYPE,MOUNTPOINT,FSTYPE,MODEL,MODE,STATE,VENDOR,UUID'
+
+## Cambiar diseño del prompt (estilo cyberpunk)
+# -------------------------------------------------------------------
+# color (técnica/grisácea)
+PS1='\[\e[0;90m\]\u ୧༼ಠ益ಠ╭∩╮༽\[\e[0;33m\][\H]\[\e[0m\] \[\e[1;37;48;5;1m\] \w \[\e[0m\]$: '
+
+# Opción técnica/grisácea
+export LS_COLORS="di=1;30:fi=0;37:ln=1;33:so=1;35:pi=1;33:bd=1;30:cd=1;30:or=1;31:mi=1;31:ex=1;31"
+#     di — directorios en gris oscuro técnico (bold black)
+#     fi — archivos normales en gris medio
+#     ln — enlaces simbólicos en amarillo (bold yellow)
+#     so — sockets en púrpura oscuro (bold magenta)
+#     pi — pipes (tuberías) en amarillo (bold yellow)
+#     bd — dispositivos de bloque en gris carbón (bold black)
+#     cd — dispositivos de carácter en gris plomo (bold black)
+#     or — archivos rotos en rojo sangre oscuro (bold red)
+#     mi — archivos inexistentes en rojo sangre oscuro (bold red)
+#     ex — ejecutables en rojo brillante (bold red)
+EOF
+
+# Configuro vimrc (técnica/grisácea)
+# -------------------------------------------------------------------
+cat <<EOF > ~/.vimrc
+set number                                    " Muestra números de línea
+set cursorline                                " Resalta línea actual
+set scrolloff=5                               " Mantiene 5 líneas arriba/abajo
+set incsearch                                 " Búsqueda incremental
+set hlsearch                                  " Resalta resultados búsqueda
+set ignorecase                                " Ignora mayúsculas/minúsculas
+set smartcase                                 " Caso sensible si hay mayúsculas
+set expandtab                                 " Usa espacios en lugar de tabs
+set tabstop=4
+set shiftwidth=4
+set wildmenu                                  " Mejor autocompletado en cmd
+syntax on
+set background=dark
+
+" Colores personalizados básicos para consola
+highlight Normal ctermfg=248 ctermbg=236      " Texto gris medio / fondo gris carbón
+highlight Comment ctermfg=33                  " Comentarios azul marino fuerte
+highlight LineNr ctermfg=240                  " Números gris oscuro
+highlight CursorLine ctermbg=238              " Fondo línea cursor gris plomo
+highlight Keyword ctermfg=61                  " Palabras clave azul cobalto apagado
+highlight Function ctermfg=94                 " Funciones púrpura oscuro
+highlight Statement ctermfg=124               " Sentencias rojo sangre oscuro
+highlight Visual ctermbg=240                  " Selección gris oscuro
+
+set laststatus=2                              " Siempre mostrar línea de estado
+set noerrorbells                              " Sin sonidos de error
+set clipboard=unnamedplus                     " Usa portapapeles del sistema
+EOF
+
+            break
+            ;;
+            
+        *)
+            echo "Opción de diseño no válida. Intenta de nuevo."
+            ;;
+    esac
+done
 
 # Agrego mis propios comandos:
 
@@ -279,14 +419,15 @@ YELLOW="\e[33m"
 RESET="\e[0m"
 
 printf "%b\n" "\
-${YELLOW}chattr +i /ruta/origen/documento.txt${RESET}                                       - Establece atributo inmutable (impide modificar/borrar el archivo, -i para revertirlo).
-${YELLOW}snmpwalk -v2c -c <COMMUNITY-SNMP> -Oneq <IP-SNMP> .1 > dc1-kvm1.snmpwalk${RESET}   - Exporta árbol SNMP completo al archivo dc1-kvm1.snmpwalk.
-${YELLOW}rsync -avzc --progress /ruta/origen/ usuario@host:/ruta/destino/${RESET}           - Copia eficiente de Linux a Linux, mantiene permisos y metadatos (usuarios, hard-links...).
-${YELLOW}scp -r /ruta/origen/ usuario@host:/ruta/destino/${RESET}                           - Copia directa pero más lenta, ideal usando Windows, si Windows no tiene rsync.
-${YELLOW}tar -czvf prueba.tar.gz comprimir/${RESET}                                         - Comprime carpeta con gzip.
-${YELLOW}tar -xzvf prueba.tar.gz${RESET}                                                    - Extrae contenido si fue comprimido con gzip.
-${YELLOW}smbstatus | grep \"nombre_del_archivo.xls\"${RESET}                                  - Verifica si un archivo está abierto por Samba (lo detengo con kill -9).
-${YELLOW}smbstatus -L${RESET}                                                               - Lista todos los archivos abiertos vía Samba con usuarios y PIDs.
+${YELLOW}chattr +i /ruta/origen/documento.txt${RESET}                                           - Establece atributo inmutable (impide modificar/borrar el archivo, -i para revertirlo).
+${YELLOW}snmpwalk -v2c -c <COMMUNITY-SNMP> -Oneq <IP-SNMP> .1 > dc1-kvm1.snmpwalk${RESET}       - Exporta árbol SNMP completo al archivo dc1-kvm1.snmpwalk.
+${YELLOW}rsync -avzc --progress /ruta/origen/ usuario@host:/ruta/destino/${RESET}               - Copia eficiente de Linux a Linux, mantiene permisos y metadatos (usuarios, hard-links...).
+${YELLOW}scp -r /ruta/origen/ usuario@host:/ruta/destino/${RESET}                               - Copia directa pero más lenta, ideal usando Windows, si Windows no tiene rsync.
+${YELLOW}tar -czvf prueba.tar.gz comprimir/${RESET}                                             - Comprime carpeta con gzip.
+${YELLOW}tar -xzvf prueba.tar.gz${RESET}                                                        - Extrae contenido si fue comprimido con gzip.
+${YELLOW}smbstatus | grep \"nombre_del_archivo.xls\"${RESET}                                      - Verifica si un archivo está abierto por Samba (lo detengo con kill -9).
+${YELLOW}smbstatus -L${RESET}                                                                   - Lista todos los archivos abiertos vía Samba con usuarios y PIDs.
+${YELLOW}nmap -p- --open -T5 -v -n [Ip Víctima] -oG [Nombre del archivo de guardado.]${RESET}   - nmap: escanea todos los puertos de la victima y lo guarda con -oG en el archivo índicado.
 "
 EOF
 
@@ -318,58 +459,6 @@ systemctl restart rsyslog
 #localectl
 localectl set-locale LANG=en_US.UTF-8
 localectl
-
-# Configuro vimrc (estilo cyberpunk)
-# **************************************
-cat <<EOF > ~/.vimrc
-" configuración archivo .vimrc
-" Configuración del archivo .vimrc
-set number                                              " Muestra los números de línea en el margen izquierdo.
-set cursorline                                          " Resalta la línea donde se encuentra el cursor.
-set scrolloff=8                                         " Mantiene 8 líneas visibles por encima y por debajo del cursor al desplazarse.
-set incsearch                                           " Realiza la búsqueda de manera incremental, mostrando resultados a medida que se escribe.
-set hlsearch                                            " Resalta todas las coincidencias de la búsqueda.
-set ignorecase                                          " Ignora mayúsculas y minúsculas en las búsquedas.
-set smartcase                                           " Si se usa una mayúscula en la búsqueda, se activa la distinción entre mayúsculas y minúsculas.
-set expandtab                                           " Convierte las tabulaciones en espacios.
-set tabstop=4                                           " Establece el ancho de una tabulación a 4 espacios.
-set shiftwidth=4                                        " Establece el ancho de sangría a 4 espacios.
-set wildmenu                                            " Mejora la interfaz de autocompletado en la línea de comandos.
-set foldmethod=indent                                   " Usa la indentación para determinar los pliegues de código.
-set foldlevel=99                                        " Establece el nivel de pliegue inicial a 99, mostrando todo el código.
-syntax on                                               " Activa el resaltado de sintaxis.
-set background=dark                                     " Establece el fondo oscuro para el resaltado de sintaxis.
-colorscheme industry                                    " Aplica el esquema de colores 'industry'.
-highlight Comment ctermfg=Green guifg=#00FF00           " Resalta los comentarios en verde.
-highlight LineNr ctermfg=Magenta                        " Resalta los números de línea en magenta.
-highlight CursorLineNr ctermfg=DarkMagenta              " Resalta el número de línea del cursor en magenta oscuro.
-highlight Normal ctermfg=White ctermbg=DarkGray         " Establece el color normal del texto a blanco sobre fondo gris oscuro.
-highlight Keyword ctermfg=LightGray                     " Resalta las palabras clave en gris claro.
-highlight Function ctermfg=Yellow                       " Resalta las funciones en amarillo.
-highlight Type ctermfg=Magenta                          " Resalta los tipos de datos en magenta.
-highlight Constant ctermfg=Magenta                      " Resalta las constantes en magenta.
-highlight Identifier ctermfg=White                      " Resalta los identificadores en blanco.
-highlight Statement ctermfg=Yellow                      " Resalta las declaraciones en amarillo.
-highlight Error ctermfg=White ctermbg=Red               " Resalta los errores en blanco sobre fondo rojo.
-highlight Search ctermfg=Black ctermbg=Yellow           " Resalta la búsqueda en negro sobre fondo amarillo.
-highlight Visual ctermbg=Grey                           " Resalta la selección visual en gris.
-highlight StatusLine ctermfg=Blue ctermbg=White         " Establece el color de la línea de estado en azul sobre fondo blanco.
-highlight StatusLineNC ctermfg=Blue ctermbg=DarkGray    " Establece el color de la línea de estado no activa en azul sobre fondo gris oscuro.
-highlight Special ctermfg=Blue                          " Resalta los elementos especiales en azul.
-highlight PreProc ctermfg=Grey                          " Resalta las preprocesadores en gris.
-highlight Todo ctermfg=Black ctermbg=Yellow             " Resalta las tareas pendientes en negro sobre fondo amarillo.
-highlight Underlined ctermfg=White                      " Resalta el texto subrayado en blanco.
-highlight Pmenu ctermbg=DarkGray                        " Establece el fondo del menú de completado en gris oscuro.
-highlight PmenuSel ctermbg=Blue ctermfg=White           " Establece el fondo del menú de selección en azul y el texto en blanco.
-highlight DiffAdd ctermbg=Green                         " Resalta las adiciones en el diff en verde.
-highlight DiffChange ctermbg=Yellow                     " Resalta los cambios en el diff en amarillo.
-highlight DiffDelete ctermbg=Red                        " Resalta las eliminaciones en el diff en rojo.
-highlight Folded ctermfg=White ctermbg=DarkBlue         " Resalta los pliegues en blanco sobre fondo azul oscuro.
-set laststatus=2                                        " Siempre muestra la línea de estado.
-set noerrorbells                                        " Desactiva los sonidos de error.
-set history=1000                                        " Establece el tamaño del historial de comandos a 1000 entradas.
-set clipboard=unnamedplus                               " Usa el portapapeles del sistema para copiar y pegar.
-EOF
 
 # Información en inicio de sesión
 echo '# información inicio de sesión' >> /etc/bash.bashrc
@@ -577,13 +666,20 @@ EOF
 # editor de texto por defecto
 # **************************************
 # modifico el editor por defecto del sistema para muchas aplicaciones (como crontab)
-# Para el usuario actual
-echo "export VISUAL=vim" >> ~/.bashrc
-echo "export EDITOR=vim" >> ~/.bashrc
-# Para root (si usas sudo crontab -e)
-sudo bash -c 'echo "export VISUAL=vim" >> /root/.bashrc'
-sudo bash -c 'echo "export EDITOR=vim" >> /root/.bashrc'
-. "$HOME/.cargo/env"
+# Detectar si el usuario es root
+if [ "$EUID" -eq 0 ]; then
+    BASHRC="/root/.bashrc"
+else
+    BASHRC="$HOME/.bashrc"
+fi
+
+# Añadir VISUAL si no existe
+grep -qxF 'export VISUAL=vim' "$BASHRC" || echo 'export VISUAL=vim' >> "$BASHRC"
+
+# Añadir EDITOR si no existe
+grep -qxF 'export EDITOR=vim' "$BASHRC" || echo 'export EDITOR=vim' >> "$BASHRC"
+
+
 
 # Deshabilitar IPv6
 # **************************************
@@ -606,7 +702,7 @@ if [[ "$respuestaswap" == "s" || "$respuestaswap" == "S" ]]; then
     sudo chmod 600 /swapfile
     
     # formatear como swap
-    sudo mkswap /swapfile
+    mkswap /swapfile
     
     # activar swap
     sudo swapon /swapfile
