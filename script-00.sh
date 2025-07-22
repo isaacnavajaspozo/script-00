@@ -102,8 +102,8 @@ fi
 # Preguntar al usuario el estilo
 while true; do
     echo -e "${YELLOW}Selecciona el estilo: ${NC}"
-    echo "1) Estilo cyberpunk                        # estilo cyberpunk y profesional (rosa y verde)"
-    echo "2) Estilo técnica/grisácea                 # estilo alternativo e informal (gris y amarillo)"    
+    echo "1) Estilo cyberpunk                        # diferencial y profesional (rosa y verde)"
+    echo "2) Estilo personal                         # alternativo e informal (gris y amarillo)"    
     read -rp "Opción (1 o 2): " opcion
 
     case "$opcion" in
@@ -520,44 +520,46 @@ source /etc/bash.bashrc
 mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.ori
 touch /etc/snmp/snmpd.conf
 cat <<EOF > /etc/snmp/snmpd.conf
-#
-# SNMPD Configuration
-# Isaac (v2) - 2025
-#
+## SNMPD Configuration | Isaac (v2) - 2025
+## puerto por defecto de escucha para SNMP
 agentAddress udp:161
 
 # =====[DEFINO-RED-SNMP]============================================================================================
+## permite que equipos de esa red consulten SNMP con esa comunidad
+# **rocommunity**	: Read-Only
+# **rwcommunity**	: Read-Write
 rocommunity MaltLiquor_25 localhost
 rocommunity MaltLiquor_25 39.1.0.0/16
 rocommunity MaltLiquor_25 192.168.1.0/24
 
-# =====[ESCRITURA-VALORES]==========================================================================================
-# sobreescribo o fuerzo valores
+# =====[SOBREESCRIBIR-VALORES]======================================================================================
+## sobreescribo o fuerzo OIDs existentes
 syslocation "🤖 CPD"
 syscontact "🤖 Informatica <informatica@aptelliot.es>"
 
 # =====[HABILITO-OIDS]==============================================================================================
-# OIDs importantes:
-# sysObjectID: .1.3.6.1.2.1.1.2  # Identificador único del objeto del sistema (por ejemplo, el tipo de dispositivo)
-# sysDescr: .1.3.6.1.2.1.1.1     # Descripción del sistema (por ejemplo, el modelo y la versión del firmware)
-# sysUpTime: .1.3.6.1.2.1.1.3    # Tiempo que el sistema ha estado funcionando desde el último reinicio
-# sysContact: .1.3.6.1.2.1.1.4   # Información de contacto del administrador del sistema
-# sysName: .1.3.6.1.2.1.1.5      # Nombre del sistema
-# sysLocation: .1.3.6.1.2.1.1.6  # Ubicación física del sistema
-# sysServices: .1.3.6.1.2.1.1.7  # Servicios disponibles en el sistema (por ejemplo, SNMP, HTTP, FTP)
+## OIDs importantes definidos por defecto:
+# sysObjectID: .1.3.6.1.2.1.1.2                  # Identificador único del objeto del sistema (por ejemplo, el tipo de dispositivo)
+# sysDescr: .1.3.6.1.2.1.1.1                     # Descripción del sistema (por ejemplo, el modelo y la versión del firmware)
+# sysUpTime: .1.3.6.1.2.1.1.3                    # Tiempo que el sistema ha estado funcionando desde el último reinicio
+# sysContact: .1.3.6.1.2.1.1.4                   # Información de contacto del administrador del sistema
+# sysName: .1.3.6.1.2.1.1.5                      # Nombre del sistema
+# sysLocation: .1.3.6.1.2.1.1.6                  # Ubicación física del sistema
+# sysServices: .1.3.6.1.2.1.1.7                  # Servicios disponibles en el sistema (por ejemplo, SNMP, HTTP, FTP)
 
 # =====[PERSONALIZACIÓN-RAMAS]======================================================================================
-# Ramas personalizadas
-#extend test1 /bin/echo "Hello world"
-#exec 1.3.6.1.4.1.2021.8 /bin/echo "Hello world"
+## agrego OIDs personalizados que ejecutan comandos del sistema y exponen su salida vía SNMP
+#extend test1 /bin/echo "Hello world"            # método actual: crea un identificador SNMP llamado test1 que al consultarlo devolverá "Hello world".
+#exec 1.3.6.1.4.1.2021.8 /bin/echo "Hello world" # método antiguo: asocia directamente ese OID con el comando y devuelve su salida por SNMP
 
 # =====[ACCESOS-RESTRICTIVOS]=======================================================================================
-# Solo exponer arbol de OID seguro
-view systemonly included .1.3.6.1.2.1.1.1
-view systemonly included .1.3.6.1.2.1.1.2
-view systemonly included .1.3.6.1.2.1.1.6
+## restringe el acceso solo a esos OIDs específicos del sistema
+view systemonly included .1.3.6.1.2.1.1.1        # Descripción del sistema (sysDescr)
+view systemonly included .1.3.6.1.2.1.1.2        # Identificador único del objeto del sistema (sysObjectID)
+view systemonly included .1.3.6.1.2.1.1.6        # Ubicación física del sistema (sysLocation)
 
 # =====[PERMISOS-VISTAS]============================================================================================
+## Restringe todo el árbol MIB y limita la información expuesta, permitiendo únicamente el acceso a los OIDs definidos explícitamente en la vista (ACCESOS-RESTRICTIVOS)
 # Permitir acceso de lectura para la vista definida
 access readonly "" any noauth exact systemonly none none
 
