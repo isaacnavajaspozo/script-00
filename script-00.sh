@@ -521,10 +521,9 @@ source /etc/bash.bashrc
 
 # servidor de SNMP
 # **************************************
-mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.ori
-touch /etc/snmp/snmpd.conf
+cp /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.ori
 cat <<EOF > /etc/snmp/snmpd.conf
-## SNMPD Configuration | Isaac (v2) - 2025
+## SNMPD Configuration | Isaac (v5) - 07/2025
 ## puerto por defecto de escucha para SNMP
 agentAddress udp:161
 
