@@ -540,7 +540,7 @@ rocommunity HandShake_25 192.168.1.0/24
 syslocation "🤖 CPD"
 syscontact "🤖 Informatica <informatica@aptelliot.es>"
 
-# =====[HABILITO-OIDS]==============================================================================================
+# =====[DOCUMENTACIÓN-OIDS]=========================================================================================
 ## OIDs importantes definidos por defecto:
 # sysObjectID: .1.3.6.1.2.1.1.2                  # Identificador único del objeto del sistema (por ejemplo, el tipo de dispositivo)
 # sysDescr: .1.3.6.1.2.1.1.1                     # Descripción del sistema (por ejemplo, el modelo y la versión del firmware)
