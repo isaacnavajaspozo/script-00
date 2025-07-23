@@ -244,11 +244,12 @@ set hlsearch                                  " Resalta resultados búsqueda
 set ignorecase                                " Ignora mayúsculas/minúsculas
 set smartcase                                 " Caso sensible si hay mayúsculas
 set expandtab                                 " Usa espacios en lugar de tabs
-set tabstop=4
-set shiftwidth=4
-set wildmenu                                  " Mejor autocompletado en cmd
-syntax on
-set background=dark
+set tabstop=4                                 " Número de espacios que representa un tabulador
+set shiftwidth=4                              " Número de espacios para indentación automática
+set wildmenu                                  " Mejor autocompletado en la línea de comandos
+syntax on                                     " Activa el resaltado de sintaxis
+set background=dark                           " Tema oscuro para el fondo
+
 
 " Colores personalizados básicos para consola
 highlight Normal ctermfg=248 ctermbg=236      " Texto gris medio / fondo gris carbón
