@@ -336,7 +336,7 @@ log_dir="/var/log/ping"
 
 # Si el primer argumento es -r, cambiar al directorio de logs
 if [[ "$1" == "-r" ]]; then
-  cd "$log_dir" 2>/dev/null || { echo "No se pudo acceder a $log_dir"; exit 1; }
+  cd "$log_dir" 2>/dev/null || { echo "No se pudo acceder a $log_dir posiblemente porque no existe ningún log."; exit 1; }
   echo "Ubicación actual: $(pwd)"
   ls -l --color=auto
   exit 0
