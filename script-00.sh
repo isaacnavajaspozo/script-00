@@ -431,7 +431,7 @@ ${YELLOW}tar -xzvf prueba.tar.gz${RESET}                                        
 ${YELLOW}smbstatus | grep \"nombre_del_archivo.xls\"${RESET}                                      - Verifica si un archivo está abierto por Samba (lo detengo con kill -9).
 ${YELLOW}smbstatus -L${RESET}                                                                   - Lista todos los archivos abiertos vía Samba con usuarios y PIDs.
 ${YELLOW}nmap -p- --open -T5 -v -n [Ip Víctima] -oG [Nombre del archivo de guardado.]${RESET}   - nmap: escanea todos los puertos de la victima y lo guarda con -oG en el archivo índicado.
-${YELLOW}curl ifconfig.es || curl ifconfig.me${RESET}                                           - curl: muestra la ip pública.
+${YELLOW}curl ifconfig.es${RESET}                                                               - curl: muestra la ip pública (también existe ifconfig.me).
 "
 EOF
 
