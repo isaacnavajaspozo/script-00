@@ -528,9 +528,9 @@ agentAddress udp:161
 ## permite que equipos de esa red consulten SNMP con esa comunidad
 # **rocommunity**	: Read-Only
 # **rwcommunity**	: Read-Write
-rocommunity MaltLiquor_25 localhost
-rocommunity MaltLiquor_25 39.1.0.0/16
-rocommunity MaltLiquor_25 192.168.1.0/24
+rocommunity HandShake_25 localhost
+rocommunity HandShake_25 39.1.0.0/16
+rocommunity HandShake_25 192.168.1.0/24
 
 # =====[SOBREESCRIBIR-VALORES]======================================================================================
 ## sobreescribo o fuerzo OIDs existentes
