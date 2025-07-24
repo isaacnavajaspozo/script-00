@@ -727,5 +727,8 @@ else
 fi
 # -------------------------------------------------------------------
 
+echo "Configurado e instalado snmp a través de snmpd como servidor consultado, ahora falta instalar desde el servidor cliente snmpwalk (consulta todo el subárbol de OIDs) y snmpget (consulta un OID en concreto)."
+echo ""
+
 echo -e "${YELLOW}¡Listo! Los paquetes se instalaron y la configuración esta completa. ${NC}"
 echo -e "${YELLOW}Abre una nueva sesión para trabajar sobre los cambios. ${NC}"
