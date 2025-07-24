@@ -576,6 +576,9 @@ EOF
 systemctl start snmpd
 systemctl enable snmpd
 
+echo "✅ Configurado e instalado snmp a través de snmpd como servidor consultado, ahora falta instalar desde el servidor cliente snmpwalk (consulta todo el subárbol de OIDs) y snmpget (consulta un OID en concreto)."
+echo ""
+
 # Hora
 # **************************************
 timedatectl set-timezone Europe/Madrid
@@ -684,8 +687,6 @@ grep -qxF 'export VISUAL=vim' "$BASHRC" || echo 'export VISUAL=vim' >> "$BASHRC"
 # Añadir EDITOR si no existe
 grep -qxF 'export EDITOR=vim' "$BASHRC" || echo 'export EDITOR=vim' >> "$BASHRC"
 
-
-
 # Deshabilitar IPv6
 # **************************************
 echo -e "# Deshabilitamos IPv6\nnet.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1" >> /etc/sysctl.conf
@@ -726,9 +727,6 @@ else
     echo "Continuando con la instalación sin crear el archivo /swapfile."
 fi
 # -------------------------------------------------------------------
-
-echo "Configurado e instalado snmp a través de snmpd como servidor consultado, ahora falta instalar desde el servidor cliente snmpwalk (consulta todo el subárbol de OIDs) y snmpget (consulta un OID en concreto)."
-echo ""
 
 echo -e "${YELLOW}¡Listo! Los paquetes se instalaron y la configuración esta completa. ${NC}"
 echo -e "${YELLOW}Abre una nueva sesión para trabajar sobre los cambios. ${NC}"
