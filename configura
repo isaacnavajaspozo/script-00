@@ -731,5 +731,67 @@ else
 fi
 # -------------------------------------------------------------------
 
+# Archivo iptables
+# **************************************
+apt install iptables iptables-persistent -y
+systemctl enable netfilter-persistent
+
+# iptables V4
+# -------------------------------------------------------------------
+cat <<EOF > /etc/iptables/rules.v4
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+# SSH
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
+# Permitir HTTP (puerto 80) y HTTPS (puerto 443) si es necesario un panel web
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
+# Permitimos recibir respuestas DHCP para monitorizar servicios DHCP
+#-A INPUT -p udp --sport 67 --dport 68 -j ACCEPT
+#-A OUTPUT -p udp --sport 68 --dport 67 -j ACCEPT
+# Cerramos resto
+-A INPUT -j REJECT --reject-with icmp-host-prohibited
+-A FORWARD -j REJECT --reject-with icmp-host-prohibited
+COMMIT
+EOF
+# -------------------------------------------------------------------
+
+systemctl start iptables
+iptables -L -n
+
+# iptables V6
+# -------------------------------------------------------------------
+cat <<EOF > /etc/iptables/rules.v6
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p ipv6-icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+# SSH
+-A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
+# Cerramos el resto
+-A INPUT -j REJECT --reject-with icmp6-adm-prohibited
+-A FORWARD -j REJECT --reject-with icmp6-adm-prohibited
+COMMIT
+EOF
+# -------------------------------------------------------------------
+
+systemctl start ip6tables 
+ip6tables -L -n
+
+# Actualizar proyecto
+systemctl restart iptables
+# Comprobar IPtables
+iptables -L -n -v -t filter
+
+echo "Iptables configurado correctamente."
+
 echo -e "${YELLOW}¡Listo! Los paquetes se instalaron y la configuración esta completa. ${NC}"
 echo -e "${YELLOW}Abre una nueva sesión para trabajar sobre los cambios. ${NC}"
