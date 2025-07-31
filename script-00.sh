@@ -128,6 +128,7 @@ alias df='df -hTi'
 ## Cambiar diseño del prompt (estilo cyberpunk)
 # -------------------------------------------------------------------
 # color (estilo cyberpunk)
+# PS1='\[\e[0;90m\]\u箱\e[38;5;196m[\H]\e[0m \w\[\e[0;37m\] $: '
 PS1='\[\e[0;90m\]\u箱\e[38;5;196m[\H]\e[38;5;196m\e[1;32m \w\e[0;37m $: '
 
 ## cambiar colores para ls (estilo cyberpunk)
