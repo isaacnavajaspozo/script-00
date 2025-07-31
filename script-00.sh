@@ -254,16 +254,15 @@ set wildmenu                                  " Mejor autocompletado en la líne
 syntax on                                     " Activa el resaltado de sintaxis
 set background=dark                           " Tema oscuro para el fondo
 
-
 " Colores personalizados básicos para consola
 highlight Normal ctermfg=248 ctermbg=236      " Texto gris medio / fondo gris carbón
-highlight Comment ctermfg=33                  " Comentarios azul marino fuerte
 highlight LineNr ctermfg=240                  " Números gris oscuro
 highlight CursorLine ctermbg=238              " Fondo línea cursor gris plomo
 highlight Keyword ctermfg=61                  " Palabras clave azul cobalto apagado
 highlight Function ctermfg=94                 " Funciones púrpura oscuro
 highlight Statement ctermfg=124               " Sentencias rojo sangre oscuro
 highlight Visual ctermbg=240                  " Selección gris oscuro
+highlight Comment ctermfg=3                   " Comentarios en amarillo
 
 set laststatus=2                              " Siempre mostrar línea de estado
 set noerrorbells                              " Sin sonidos de error
